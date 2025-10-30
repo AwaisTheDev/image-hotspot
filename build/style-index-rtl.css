@@ -1,0 +1,17 @@
+/*!*******************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./src/style.css ***!
+  \*******************************************************************************************************************************************************************/
+.hotspot-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.hotspot {
+  text-align: center;
+  display: flex;
+  gap: 0.3em;
+  align-items: center;
+  transition: 0.3s;
+  font-size: min(1.2vw, 17.28px);
+  white-space: nowrap;
+}

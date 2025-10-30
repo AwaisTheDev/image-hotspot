@@ -1,68 +1,14 @@
 .hotspot-wrapper {
   position: relative;
   width: 100%;
-  padding-right: 5%;
 }
 
 .hotspot {
-  background-color: var(--bg, white);
   text-align: center;
-  line-height: 0.8em;
-  color: #464646;
-  border-radius: 0px 100px 100px 0px;
-  padding: 0.4em 0.6em;
   display: flex;
   gap: 0.3em;
   align-items: center;
   transition: 0.3s;
   font-size: min(1.2vw, 17.28px);
   white-space: nowrap;
-}
-
-.hotspot.large {
-  transform: translate(-50%, -50%) scale(1.1) !important;
-}
-
-.hotspot:hover {
-  background: #313155;
-  color: white;
-}
-
-.hotspot:hover:after {
-  background: white !important;
-}
-
-.hotspot.alt {
-  flex-direction: row-reverse;
-  border-radius: 100px 0px 0px 100px;
-}
-
-.hotspot.white {
-  color: white;
-}
-
-.hotspot.white:hover {
-  background: white;
-  color: var(--bg, white);
-}
-
-.hotspot.white:hover::after {
-  background: var(--bg, white) !important;
-}
-
-.hotspot-wrapper a.hotspot::after,
-.hotspot-wrapper div.hotspot::after {
-  content: "";
-  width: 0.8em;
-  height: 0.8em;
-  background: var(--dot-bg, #434343);
-  border-radius: 500px;
-  display: inline-block;
-  transition: 0.3s;
-}
-
-
-
-.hotspot.dark {
-  color: white !important;
 }
