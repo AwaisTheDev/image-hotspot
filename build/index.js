@@ -35,10 +35,6 @@ registerBlockType('mytheme/image-hotspots', {
       type: 'number',
       default: 100
     },
-    iconSize: {
-      type: 'number',
-      default: 3
-    },
     hotspots: {
       type: 'array',
       default: []
@@ -49,7 +45,6 @@ registerBlockType('mytheme/image-hotspots', {
       attributes: {
         imageUrl,
         imageWidth,
-        iconSize,
         hotspots
       },
       setAttributes
@@ -60,7 +55,8 @@ registerBlockType('mytheme/image-hotspots', {
         y: 50,
         link: '',
         customClass: '',
-        iconUrl: ''
+        iconUrl: '',
+        iconSize: 5 // %
       }];
       setAttributes({
         hotspots: newHotspots
@@ -105,19 +101,6 @@ registerBlockType('mytheme/image-hotspots', {
         width: '100%',
         marginBottom: '16px'
       }
-    }), wp.element.createElement("label", null, "Icon size (%)"), wp.element.createElement("input", {
-      type: "range",
-      min: "1",
-      max: "20",
-      step: "1",
-      value: iconSize,
-      onChange: e => setAttributes({
-        iconSize: parseInt(e.target.value, 10)
-      }),
-      style: {
-        width: '100%',
-        marginBottom: '16px'
-      }
     }), hotspots.map((hotspot, index) => wp.element.createElement("div", {
       key: index,
       style: {
@@ -151,6 +134,17 @@ registerBlockType('mytheme/image-hotspots', {
           marginBottom: '8px'
         }
       }, hotspot.iconUrl ? 'Replace Icon' : 'Select Icon')
+    }), wp.element.createElement("label", null, "Icon Size (%)"), wp.element.createElement("input", {
+      type: "range",
+      min: "1",
+      max: "20",
+      step: "1",
+      value: hotspot.iconSize || 5,
+      onChange: e => updateHotspot(index, 'iconSize', parseInt(e.target.value, 10)),
+      style: {
+        width: '100%',
+        marginBottom: '8px'
+      }
     }), wp.element.createElement("label", null, "X Position"), wp.element.createElement("input", {
       type: "range",
       min: "0",
@@ -217,15 +211,16 @@ registerBlockType('mytheme/image-hotspots', {
         position: 'absolute',
         top: `${hotspot.y}%`,
         left: `${hotspot.x}%`,
-        transform: 'translate(-50%, -50%)'
+        transform: 'translate(-50%, -50%)',
+        width: hotspot.iconSize ? `${hotspot.iconSize}%` : undefined
       }
     }, hotspot.iconUrl && wp.element.createElement('img', {
       src: hotspot.iconUrl,
       className: 'hotspot-icon',
       alt: '',
       style: {
-        width: `${iconSize}%`,
-        height: `${iconSize}%`
+        width: '100%',
+        height: '100%'
       }
     })))));
   },
@@ -255,15 +250,16 @@ registerBlockType('mytheme/image-hotspots', {
         position: 'absolute',
         top: `${hotspot.y}%`,
         left: `${hotspot.x}%`,
-        transform: 'translate(-50%, -50%)'
+        transform: 'translate(-50%, -50%)',
+        width: hotspot.iconSize ? `${hotspot.iconSize}%` : undefined
       }
     }, hotspot.iconUrl && wp.element.createElement('img', {
       src: hotspot.iconUrl,
       className: 'hotspot-icon',
       alt: '',
       style: {
-        width: `${props.attributes.iconSize || 3}%`,
-        height: `${props.attributes.iconSize || 3}%`
+        width: '100%',
+        height: '100%'
       }
     }))));
   }

@@ -10,19 +10,19 @@ registerBlockType('mytheme/image-hotspots', {
   attributes: {
     imageUrl: { type: 'string', default: '' },
     imageWidth: { type: 'number', default: 100 },
-    iconSize: { type: 'number', default: 3 },
     hotspots: { type: 'array', default: [] }
   },
 
   edit: function (props) {
-    const { attributes: { imageUrl, imageWidth, iconSize, hotspots }, setAttributes } = props;
+    const { attributes: { imageUrl, imageWidth, hotspots }, setAttributes } = props;
 
     function addHotspot() {
       const newHotspots = [...hotspots, {
         x: 50, y: 50,
         link: '',
         customClass: '',
-        iconUrl: ''
+        iconUrl: '',
+        iconSize: 5 // %
       }];
       setAttributes({ hotspots: newHotspots });
     }
@@ -52,12 +52,6 @@ registerBlockType('mytheme/image-hotspots', {
             style: { width: '100%', marginBottom: '16px' }
           }),
 
-          wp.element.createElement("label", null, "Icon size (%)"),
-          wp.element.createElement("input", {
-            type: "range", min: "1", max: "20", step: "1", value: iconSize,
-            onChange: e => setAttributes({ iconSize: parseInt(e.target.value, 10) }),
-            style: { width: '100%', marginBottom: '16px' }
-          }),
           hotspots.map((hotspot, index) =>
             wp.element.createElement("div", { key: index, style: { marginBottom: '16px' } },
               wp.element.createElement("strong", null, `Hotspot ${index + 1}`),
@@ -83,6 +77,13 @@ registerBlockType('mytheme/image-hotspots', {
                 onSelect: media => updateHotspot(index, 'iconUrl', media.url),
                 type: "image",
                 render: ({ open }) => wp.element.createElement(Button, { onClick: open, isSecondary: true, style: { marginBottom: '8px' } }, hotspot.iconUrl ? 'Replace Icon' : 'Select Icon')
+              }),
+
+              wp.element.createElement("label", null, "Icon Size (%)"),
+              wp.element.createElement("input", {
+                type: "range", min: "1", max: "20", step: "1", value: hotspot.iconSize || 5,
+                onChange: e => updateHotspot(index, 'iconSize', parseInt(e.target.value, 10)),
+                style: { width: '100%', marginBottom: '8px' }
               }),
 
               wp.element.createElement("label", null, "X Position"),
@@ -134,9 +135,10 @@ registerBlockType('mytheme/image-hotspots', {
             position: 'absolute',
             top: `${hotspot.y}%`,
             left: `${hotspot.x}%`,
-            transform: 'translate(-50%, -50%)'
+            transform: 'translate(-50%, -50%)',
+            width: hotspot.iconSize ? `${hotspot.iconSize}%` : undefined
           }
-        }, hotspot.iconUrl && wp.element.createElement('img', { src: hotspot.iconUrl, className: 'hotspot-icon', alt: '', style: { width: `${iconSize}%`, height: `${iconSize}%` } })))
+        }, hotspot.iconUrl && wp.element.createElement('img', { src: hotspot.iconUrl, className: 'hotspot-icon', alt: '', style: { width: '100%', height: '100%' } })))
       )
     );
   },
@@ -153,9 +155,10 @@ registerBlockType('mytheme/image-hotspots', {
           position: 'absolute',
           top: `${hotspot.y}%`,
           left: `${hotspot.x}%`,
-          transform: 'translate(-50%, -50%)'
+          transform: 'translate(-50%, -50%)',
+          width: hotspot.iconSize ? `${hotspot.iconSize}%` : undefined
         }
-      }, hotspot.iconUrl && wp.element.createElement('img', { src: hotspot.iconUrl, className: 'hotspot-icon', alt: '', style: { width: `${props.attributes.iconSize || 3}%`, height: `${props.attributes.iconSize || 3}%` } })))
+      }, hotspot.iconUrl && wp.element.createElement('img', { src: hotspot.iconUrl, className: 'hotspot-icon', alt: '', style: { width: '100%', height: '100%' } })))
     );
   }
 });
