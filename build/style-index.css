@@ -1,1 +1,82 @@
-.hotspot-wrapper{position:relative;width:100%}.hotspot{align-items:center;display:flex;font-size:min(1.2vw,17.28px);gap:.3em;text-align:center;transition:.3s;white-space:nowrap}
+/*!*******************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./src/style.css ***!
+  \*******************************************************************************************************************************************************************/
+.hotspot-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.hotspot {
+  position: relative;
+  font-size: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.tooltip-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  position: absolute;
+  bottom: 100%;
+  left: calc(50% - 1px);
+}
+
+.hotspot .dot {
+  width: 1.25em !important;
+  aspect-ratio: 1/1;
+  height: 1.25em !important;
+  background: var(--hotspot-color);
+  border-radius: 500px;
+  border: 1px solid white;
+}
+
+.tooltip-wrapper .divider {
+  width: 1px;
+  background: var(--hotspot-color) !important;
+  height: 2.5em;
+}
+
+.tooltip-wrapper .inner {
+  border: 1px solid var(--hotspot-color);
+  background: white;
+  border-radius: 0.5em 0px 0.5em 0px;
+  text-align: right;
+  overflow: hidden;
+}
+
+.tooltip-wrapper .inner .hotspot-subtitle {
+  background: var(--hotspot-color);
+  padding: 0.2em;
+  color: white;
+  font-size: .75em;
+  font-weight: 400;
+}
+
+.tooltip-wrapper .inner .hotspot-title {
+  font-size: 1em;
+  display: flex;
+  padding: 0.4em;
+  flex-direction: column;
+  text-align: left;
+  color: #3D3934;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tooltip-wrapper .inner .hotspot-title span {
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+@media only screen and (max-width:767px) {
+  .hotspot {
+    font-size: 3vw;
+  }
+}
+
+/*# sourceMappingURL=style-index.css.map*/

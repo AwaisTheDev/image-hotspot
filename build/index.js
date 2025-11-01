@@ -55,8 +55,12 @@ registerBlockType('mytheme/image-hotspots', {
         y: 50,
         link: '',
         customClass: '',
-        iconUrl: '',
-        iconSize: 5 // %
+        title: '',
+        titleSpan: '',
+        subtitle: '',
+        color: '#000000',
+        showDot: false,
+        showDivider: false
       }];
       setAttributes({
         hotspots: newHotspots
@@ -122,30 +126,66 @@ registerBlockType('mytheme/image-hotspots', {
         width: '100%',
         marginBottom: '8px'
       }
-    }), wp.element.createElement("label", null, "Icon"), wp.element.createElement(MediaUpload, {
-      onSelect: media => updateHotspot(index, 'iconUrl', media.url),
-      type: "image",
-      render: ({
-        open
-      }) => wp.element.createElement(Button, {
-        onClick: open,
-        isSecondary: true,
-        style: {
-          marginBottom: '8px'
-        }
-      }, hotspot.iconUrl ? 'Replace Icon' : 'Select Icon')
-    }), wp.element.createElement("label", null, "Icon Size (%)"), wp.element.createElement("input", {
-      type: "range",
-      min: "1",
-      max: "20",
-      step: "1",
-      value: hotspot.iconSize || 5,
-      onChange: e => updateHotspot(index, 'iconSize', parseInt(e.target.value, 10)),
+    }), wp.element.createElement("label", null, "Title"), wp.element.createElement("input", {
+      type: "text",
+      value: hotspot.title || '',
+      onChange: e => updateHotspot(index, 'title', e.target.value),
       style: {
         width: '100%',
         marginBottom: '8px'
       }
-    }), wp.element.createElement("label", null, "X Position"), wp.element.createElement("input", {
+    }), wp.element.createElement("label", null, "Title Span"), wp.element.createElement("input", {
+      type: "text",
+      value: hotspot.titleSpan || '',
+      onChange: e => updateHotspot(index, 'titleSpan', e.target.value),
+      style: {
+        width: '100%',
+        marginBottom: '8px'
+      },
+      placeholder: "Optional span content inside title"
+    }), wp.element.createElement("label", null, "Subtitle"), wp.element.createElement("input", {
+      type: "text",
+      value: hotspot.subtitle || '',
+      onChange: e => updateHotspot(index, 'subtitle', e.target.value),
+      style: {
+        width: '100%',
+        marginBottom: '8px'
+      }
+    }), wp.element.createElement("label", null, "Color"), wp.element.createElement("input", {
+      type: "color",
+      value: hotspot.color || '#000000',
+      onChange: e => updateHotspot(index, 'color', e.target.value),
+      style: {
+        width: '100%',
+        marginBottom: '8px'
+      }
+    }), wp.element.createElement("label", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '8px'
+      }
+    }, wp.element.createElement("input", {
+      type: "checkbox",
+      checked: hotspot.showDot || false,
+      onChange: e => updateHotspot(index, 'showDot', e.target.checked),
+      style: {
+        marginRight: '8px'
+      }
+    }), "Show Dot"), wp.element.createElement("label", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '8px'
+      }
+    }, wp.element.createElement("input", {
+      type: "checkbox",
+      checked: hotspot.showDivider || false,
+      onChange: e => updateHotspot(index, 'showDivider', e.target.checked),
+      style: {
+        marginRight: '8px'
+      }
+    }), "Show Divider"), wp.element.createElement("label", null, "X Position"), wp.element.createElement("input", {
       type: "range",
       min: "0",
       max: "100",
@@ -206,23 +246,35 @@ registerBlockType('mytheme/image-hotspots', {
       }, "Select Image")
     }), hotspots.map((hotspot, index) => wp.element.createElement("div", {
       key: index,
-      className: `hotspot ${hotspot.customClass || ''} ${hotspot.iconUrl ? 'has-icon' : ''}`,
+      className: `hotspot ${hotspot.customClass || ''}`,
       style: {
         position: 'absolute',
         top: `${hotspot.y}%`,
         left: `${hotspot.x}%`,
         transform: 'translate(-50%, -50%)',
-        width: hotspot.iconSize ? `${hotspot.iconSize}%` : undefined
+        '--hotspot-color': hotspot.color || '#000000'
       }
-    }, hotspot.iconUrl && wp.element.createElement('img', {
-      src: hotspot.iconUrl,
-      className: 'hotspot-icon',
-      alt: '',
-      style: {
-        width: '100%',
-        height: '100%'
-      }
-    })))));
+    }, [hotspot.showDot && wp.element.createElement('div', {
+      key: 'dot',
+      className: 'dot'
+    }), wp.element.createElement('div', {
+      key: 'tooltip-wrapper',
+      className: 'tooltip-wrapper'
+    }, [hotspot.showDivider && wp.element.createElement('div', {
+      key: 'divider',
+      className: 'divider'
+    }), wp.element.createElement('div', {
+      key: 'inner',
+      className: 'inner'
+    }, [hotspot.subtitle && wp.element.createElement('div', {
+      key: 'subtitle',
+      className: 'hotspot subtitle'
+    }, hotspot.subtitle), hotspot.title && wp.element.createElement('div', {
+      key: 'title',
+      className: 'hotspot-title'
+    }, [hotspot.title, hotspot.titleSpan && wp.element.createElement('span', {
+      key: 'span'
+    }, hotspot.titleSpan)])])])]))));
   },
   save: function (props) {
     const {
@@ -242,26 +294,48 @@ registerBlockType('mytheme/image-hotspots', {
       style: {
         width: `${props.attributes.imageWidth || 100}%`
       }
-    }), hotspots.map((hotspot, index) => wp.element.createElement("a", {
-      key: index,
-      href: hotspot.link,
-      className: `hotspot ${hotspot.customClass || ''} ${hotspot.iconUrl ? 'has-icon' : ''}`,
-      style: {
-        position: 'absolute',
-        top: `${hotspot.y}%`,
-        left: `${hotspot.x}%`,
-        transform: 'translate(-50%, -50%)',
-        width: hotspot.iconSize ? `${hotspot.iconSize}%` : undefined
-      }
-    }, hotspot.iconUrl && wp.element.createElement('img', {
-      src: hotspot.iconUrl,
-      className: 'hotspot-icon',
-      alt: '',
-      style: {
-        width: '100%',
-        height: '100%'
-      }
-    }))));
+    }), hotspots.map((hotspot, index) => {
+      const hotspotContent = [hotspot.showDot && wp.element.createElement('div', {
+        key: 'dot',
+        className: 'dot'
+      }), wp.element.createElement('div', {
+        key: 'tooltip-wrapper',
+        className: 'tooltip-wrapper'
+      }, [hotspot.showDivider && wp.element.createElement('div', {
+        key: 'divider',
+        className: 'divider'
+      }), wp.element.createElement('div', {
+        key: 'inner',
+        className: 'inner'
+      }, [hotspot.subtitle && wp.element.createElement('div', {
+        key: 'subtitle',
+        className: 'hotspot-subtitle'
+      }, hotspot.subtitle), hotspot.title && wp.element.createElement('div', {
+        key: 'title',
+        className: 'hotspot-title'
+      }, [hotspot.title, hotspot.titleSpan && wp.element.createElement('span', {
+        key: 'span'
+      }, hotspot.titleSpan)])])])];
+      const hotspotProps = {
+        key: index,
+        className: `hotspot ${hotspot.customClass || ''}`,
+        style: {
+          position: 'absolute',
+          top: `${hotspot.y}%`,
+          left: `${hotspot.x}%`,
+          transform: 'translate(-50%, -50%)',
+          '--hotspot-color': hotspot.color || '#000000'
+        }
+      };
+      return hotspot.link ? wp.element.createElement("a", {
+        ...hotspotProps,
+        href: hotspot.link,
+        style: {
+          ...hotspotProps.style,
+          textDecoration: 'none'
+        }
+      }, hotspotContent) : wp.element.createElement("div", hotspotProps, hotspotContent);
+    }));
   }
 });
 
